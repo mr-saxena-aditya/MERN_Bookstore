@@ -15,6 +15,38 @@ app.get('/', (request, response) => {
     return response.status(234).send('Welcome to the MERN Bookstore')
 });
 
+// Route: Get all books
+app.get('/books', async(request, response) => {
+        try {
+            const books = await Book.find({});
+            return response.status(200).json({
+                count: books.length,
+                data: books
+            })
+        } catch (error) {
+            console.log(error.message);
+            return response.status(500).send(error.message);
+        }
+    }
+);
+
+// Route: Get a book by ID
+
+app.get('/books/:id', async (request, response) => {
+    try {
+
+        const { id } = request.params;
+
+        const book = await Book.findById(id);
+
+        if (!book) return response.status(404).send('Book not found');
+
+        return response.status(200).json(book);
+    } catch (error) {
+        return response.status(500).send(error.message);
+    }
+});
+
 // Post a book
 app.post('/books', async (request, response) => {
     try {
